@@ -33,6 +33,30 @@
 |t7|quit|-|
 |t8|-|quit|
 
+## pseudo-code
+
+```c
+    main():
+        sbuf = get_shared_memory()
+        init(sbuf)
+        while true:
+            if write:
+                item = input()
+                P(slots)
+                P(mutex)
+                write(item)
+                V(mutex)
+                V(items)
+            else if read:
+                P(items)
+                P(mutex)
+                item = read()
+                V(mutex)
+                V(slots)
+                print(item)
+        delete(sbuf)
+```
+
 ## Reference
 
 ### sbuf
@@ -43,7 +67,7 @@ This is a simple buffer package from CSAPP(chap 12). Source code at [this page][
 
 #### What have I done on it
 
-Since this simple package is based on thread which is slightly different from process, I have to rewritten some part to adapt it to shared memory.
+Since this simple package is based on thread which is slightly different from process, I have to rewrite some part to adapt it to shared memory.
 
 * Function ```sbuf_init``` calloc another chunck of memory as buffer which is already owned by process. So I just assign that part at the ```shmget```.
 
@@ -67,7 +91,7 @@ However I do encounter a problem which need tab not spaces before segement. [Mor
 
 ![msgget](lab1.msgget.png)
 
-Since ```msgget``` is not implemented in WSL, I have no choice but to use other methods to get process known of messages. Then I recalled some part in CSAPP which indeed give me some insights(codes more technically). However when I almost finished this lab I found it is an inter-thread communication solution.
+Since ```msgget``` is not implemented in WSL, I have no choice but to use other methods to get process known of messages. Then I recalled some part in CSAPP which indeed gave me some insights(codes more technically). However when I almost finished this lab I found it is an inter-thread communication solution.
 
 To solve that, I turn to shared memory example and I soon realized that it is the same with memory in thread.
 
