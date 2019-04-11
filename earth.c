@@ -1,41 +1,16 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <sys/shm.h>
 #include "sbuf.h"
+#include "shm.h"
 
 int main() {
-    key_t key;
-    // 获取key值
-    if ((key = ftok(".", 'z')) < 0) {
-        perror("ftok error");
-        exit(EXIT_FAILURE);
-    }
+    int e2m_id = shm_id(60);
+    int m2e_id = shm_id(120);
+    struct sbuf_t *e2m = shm_new(e2m_id);
+    struct sbuf_t *m2e = shm_new(m2e_id);
 
-    int shmid;
-    // 创建共享内存
-    size_t size = sizeof(sbuf_t) + N * sizeof(int);
-    if ((shmid = shmget(key, size, IPC_CREAT | 0666)) == -1) {
-        perror("Create Shared Memory Error");
-        exit(EXIT_FAILURE);
-    }
-
-    char *shm;
-    // 连接共享内存
-    shm = (char *)shmat(shmid, 0, 0);
-    if ((int)shm == -1) {
-        perror("Attach Shared Memory Error");
-        exit(EXIT_FAILURE);
-    }
-
-    printf("\nMemory attached at %X\n", (int)shm);
-
-    // 设置共享内存
-    struct sbuf_t *shared;  // 指向shm
-    shared =
-        (struct sbuf_t *)shm;  // 注意：shm有点类似通过 malloc()
-                               // 获取到的内存，所以这里需要做个 类型强制转换
-
-    sbuf_init(shared, N);
+    sbuf_init(e2m, N);
+    sbuf_init(m2e, N);
 
     printf("***************************************\n");
     printf("*     Hello commander, welcome to     *\n");
@@ -55,10 +30,15 @@ int main() {
             printf("What do you want to tell Mars?\n");
             scanf("%d", &item);
             getchar();
-            sbuf_insert(shared, item);
-            printf("Your message have been successfully sent to Mars.\n");
+            int status = sbuf_insert_noblock(e2m, item);
+            if (status == -1)
+                printf(
+                    "Mars haven't read some messages. Failed to send "
+                    "messages.\n");
+            else
+                printf("Your message have been successfully sent to Mars.\n");
         } else if (op == 2) {
-            item = sbuf_remove_noblock(shared);
+            item = sbuf_remove_noblock(m2e);
             if (item == -1)
                 printf("No more new message from Mars!\n");
             else
@@ -70,15 +50,8 @@ int main() {
     }
     printf("Bye commander.\n");
 
-    // 把共享内存从当前进程中分离
-    if (shmdt(shm) == -1) {
-        fprintf(stderr, "shmdt failed\n");
-        exit(EXIT_FAILURE);
-    }
-
-    // 删除共享内存
-    if (shmctl(shmid, IPC_RMID, 0) == -1) {
-        fprintf(stderr, "shmctl(IPC_RMID) failed\n");
-        exit(EXIT_FAILURE);
-    }
+    shm_unlink((char *)e2m);
+    shm_unlink((char *)m2e);
+    shm_delete(e2m_id);
+    shm_delete(m2e_id);
 }

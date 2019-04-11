@@ -37,6 +37,19 @@ void sbuf_insert(sbuf_t *sp, int item)
 }
 /* $end sbuf_insert */
 
+/* $begin sbuf_insert_noblock */
+int sbuf_insert_noblock(sbuf_t *sp, int item)
+{
+    int try = sem_trywait(&sp->slots);                          /* Wait for available slot */
+    if(try==-1) return -1;
+    sem_wait(&sp->mutex);                          /* Lock the buffer */
+    sp->buf[(++sp->rear)%(sp->n)] = item;   /* Insert the item */
+    sem_post(&sp->mutex);                          /* Unlock the buffer */
+    sem_post(&sp->items);                          /* Announce available item */
+    return 0;
+}
+/* $end sbuf_insert_noblock */
+
 /* Remove and return the first item from buffer sp */
 /* $begin sbuf_remove */
 int sbuf_remove(sbuf_t *sp)
@@ -53,7 +66,7 @@ int sbuf_remove(sbuf_t *sp)
 
 /* Remove and return the first item from buffer sp but non-block
    Return -1 to indicate error*/
-/* $begin sbuf_remove */
+/* $begin sbuf_remove_noblock */
 int sbuf_remove_noblock(sbuf_t *sp)
 {
     int item;
@@ -65,5 +78,5 @@ int sbuf_remove_noblock(sbuf_t *sp)
     sem_post(&sp->slots);                          /* Announce available slot */
     return item;
 }
-/* $end sbuf_remove */
+/* $end sbuf_remove_noblock */
 /* $end sbufc */

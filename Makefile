@@ -1,10 +1,10 @@
 cc = gcc
 promEarth = earth
 promMars = mars
-deps = sbuf.h
-obj = earth.o mars.o sbuf.o
-objEarth = earth.o sbuf.o
-objMars = mars.o sbuf.o
+deps = sbuf.h shm.h
+obj = earth.o mars.o sbuf.o shm.o
+objEarth = earth.o sbuf.o shm.o
+objMars = mars.o sbuf.o shm.o
 
 prom: $(obj)
 	$(cc) -o $(promEarth) $(objEarth) -lpthread

@@ -16,22 +16,58 @@
 
 ## Example
 
-> This example runs on WSL(Windows Subsystem on Linux), which may be slightly different from common environment.
+> All examples run on WSL(Windows Subsystem on Linux), which may be slightly different from common environment.
 
-![earth](lab1.earth.png)
+### Half-duplex
 
-![mars](lab1.mars.png)
+![earth](https://github.com/thekingofcity/OS/blob/lab1/lab1.earth.oneside.PNG)
 
-|\\|Earth|Mars|
+![mars](https://github.com/thekingofcity/OS/blob/lab1/lab1.mars.oneside.PNG)
+
+|Time|Earth|Mars|
+|:---:|:---:|:---:|
+|t1|send 15213 to Mars|-|
+|t2|read empty from Mars|-|
+|t3|-|read 15213 from Earth|
+|t4|-|send 6033 to Earth|
+|t5|-|read empty from Earth|
+|t6|quit|-|
+|t7|-|quit|
+
+### Full-duplex
+![earth](https://github.com/thekingofcity/OS/blob/lab1/lab1.earth.PNG)
+
+![mars](https://github.com/thekingofcity/OS/blob/lab1/lab1.mars.PNG)
+
+|Time|Earth|Mars|
 |:---:|:---:|:---:|
 |t1|send 15213 to Mars|-|
 |t2|-|read 15213 from Earth|
 |t3|-|send 6033 to Earth|
 |t4|read 6033 from Mars|-|
-|t5|read empty from Mars<br>note that this is a non-block procedure|-|
-|t6|-|read empty from Earth<br>note that this is a non-block procedure|
+|t5|read empty from Mars<br><b>note that this is a non-block procedure</b>|-|
+|t6|-|read empty from Earth<br><b>note that this is a non-block procedure</b>|
 |t7|quit|-|
 |t8|-|quit|
+
+### Full Buffer (size = 2)
+
+![earth](https://github.com/thekingofcity/OS/blob/lab1/lab1.earth.fullbuffer.PNG)
+
+![mars](https://github.com/thekingofcity/OS/blob/lab1/lab1.mars.fullbuffer.PNG)
+
+|Time|Earth|Mars|empty slots|
+|:---:|:---:|:---:|:---:|
+|t1|send 15213 to Mars|-|1|
+|t2|send 6033 to Mars|-|0|
+|t3|send 999 to Mars<br><b>note we can't add more since buffer size is 2</b><br>and also this is a non-block procedure|-|0|
+|t4|-|read 15213 from Earth|1|
+|t5|send 666 to Mars|-|0|
+|t6|-|read 6033 from Earth|1|
+|t6|-|read 666 from Earth|2|
+|t7|-|read empty from Earth|2|
+|t8|quit|-|-|
+|t9|-|quit|-|
 
 ## pseudo-code
 
@@ -89,7 +125,7 @@ However I do encounter a problem which need tab not spaces before segement. [Mor
 
 ## Closing words
 
-![msgget](lab1.msgget.png)
+![msgget](https://github.com/thekingofcity/OS/blob/lab1/lab1.msgget.PNG)
 
 Since ```msgget``` is not implemented in WSL, I have no choice but to use other methods to get process known of messages. Then I recalled some part in CSAPP which indeed gave me some insights(codes more technically). However when I almost finished this lab I found it is an inter-thread communication solution.
 
