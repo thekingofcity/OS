@@ -20,9 +20,9 @@
 
 ### Half-duplex
 
-![earth](https://github.com/thekingofcity/OS/blob/lab1/lab1.earth.oneside.PNG)
+![earth](lab1.earth.oneside.PNG)
 
-![mars](https://github.com/thekingofcity/OS/blob/lab1/lab1.mars.oneside.PNG)
+![mars](lab1.mars.oneside.PNG)
 
 |Time|Earth|Mars|
 |:---:|:---:|:---:|
@@ -35,9 +35,10 @@
 |t7|-|quit|
 
 ### Full-duplex
-![earth](https://github.com/thekingofcity/OS/blob/lab1/lab1.earth.PNG)
 
-![mars](https://github.com/thekingofcity/OS/blob/lab1/lab1.mars.PNG)
+![earth](lab1.earth.PNG)
+
+![mars](lab1.mars.PNG)
 
 |Time|Earth|Mars|
 |:---:|:---:|:---:|
@@ -52,9 +53,9 @@
 
 ### Full Buffer (size = 2)
 
-![earth](https://github.com/thekingofcity/OS/blob/lab1/lab1.earth.fullbuffer.PNG)
+![earth](lab1.earth.fullbuffer.PNG)
 
-![mars](https://github.com/thekingofcity/OS/blob/lab1/lab1.mars.fullbuffer.PNG)
+![mars](lab1.mars.fullbuffer.PNG)
 
 |Time|Earth|Mars|empty slots|
 |:---:|:---:|:---:|:---:|
@@ -125,7 +126,7 @@ However I do encounter a problem which need tab not spaces before segement. [Mor
 
 ## Closing words
 
-![msgget](https://github.com/thekingofcity/OS/blob/lab1/lab1.msgget.PNG)
+![msgget](lab1.msgget.PNG)
 
 Since ```msgget``` is not implemented in WSL, I have no choice but to use other methods to get process known of messages. Then I recalled some part in CSAPP which indeed gave me some insights(codes more technically). However when I almost finished this lab I found it is an inter-thread communication solution.
 
