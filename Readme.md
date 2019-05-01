@@ -42,9 +42,9 @@ Some fix in WSL and then it is really simple to have a deb package.
 
 ### Half-duplex
 
-![earth](https://github.com/thekingofcity/OS/blob/lab1/lab1.earth.oneside.PNG)
+![earth](https://github.com/thekingofcity/OS/blob/lab1.5/lab1.earth.oneside.PNG)
 
-![mars](https://github.com/thekingofcity/OS/blob/lab1/lab1.mars.oneside.PNG)
+![mars](https://github.com/thekingofcity/OS/blob/lab1.5/lab1.mars.oneside.PNG)
 
 |Time|Earth|Mars|
 |:---:|:---:|:---:|
@@ -58,9 +58,9 @@ Some fix in WSL and then it is really simple to have a deb package.
 
 ### Full-duplex
 
-![earth](https://github.com/thekingofcity/OS/blob/lab1/lab1.earth.PNG)
+![earth](https://github.com/thekingofcity/OS/blob/lab1.5/lab1.earth.PNG)
 
-![mars](https://github.com/thekingofcity/OS/blob/lab1/lab1.mars.PNG)
+![mars](https://github.com/thekingofcity/OS/blob/lab1.5/lab1.mars.PNG)
 
 |Time|Earth|Mars|
 |:---:|:---:|:---:|
@@ -75,9 +75,9 @@ Some fix in WSL and then it is really simple to have a deb package.
 
 ### Full Buffer (size = 2)
 
-![earth](https://github.com/thekingofcity/OS/blob/lab1/lab1.earth.fullbuffer.PNG)
+![earth](https://github.com/thekingofcity/OS/blob/lab1.5/lab1.earth.fullbuffer.PNG)
 
-![mars](https://github.com/thekingofcity/OS/blob/lab1/lab1.mars.fullbuffer.PNG)
+![mars](https://github.com/thekingofcity/OS/blob/lab1.5/lab1.mars.fullbuffer.PNG)
 
 |Time|Earth|Mars|empty slots|
 |:---:|:---:|:---:|:---:|
@@ -169,7 +169,7 @@ Though steps above seems really easy to create a deb package, I encountered a wi
 
 I first tried `chmod 755 program-name/DEBIAN` without thought, however that doesn't work.
 
-![deb without metadata](https://github.com/thekingofcity/OS/blob/lab1/lab1.deb_without_metadata.PNG)
+![deb without metadata](https://github.com/thekingofcity/OS/blob/lab1.5/lab1.deb_without_metadata.PNG)
 
 After some search, this thread caught my attention
 [control directory has bad permissions 777 (must be >=0755 and <=0775)][8]. Someone comment that could be a filesystem format problem.
@@ -195,11 +195,11 @@ So move the program to `program-name/usr/local/bin/` will let the dpkg installin
 
 ### Outcome
 
-![deb](https://github.com/thekingofcity/OS/blob/lab1/lab1.deb.PNG)
+![deb](https://github.com/thekingofcity/OS/blob/lab1.5/lab1.deb.PNG)
 
 ## Closing words
 
-![msgget](https://github.com/thekingofcity/OS/blob/lab1/lab1.msgget.PNG)
+![msgget](https://github.com/thekingofcity/OS/blob/lab1.5/lab1.msgget.PNG)
 
 Since ```msgget``` is not implemented in WSL, I have no choice but to use other methods to get process known of messages. Then I recalled some part in CSAPP which indeed gave me some insights(codes more technically). However when I almost finished this lab I found it is an inter-thread communication solution.
 
