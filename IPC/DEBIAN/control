@@ -1,0 +1,5 @@
+package: IPC
+version: 1.0.0
+architecture: amd64
+maintainer: thekingofcity
+description: InterPlantery Communication

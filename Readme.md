@@ -14,15 +14,37 @@
 
 5. start your journey
 
+or
+
+1. ```git pull```
+
+2. `sudo dpkg -i ipc_1.0.0_amd64.deb`
+
+3. open one terminal and type `earth`
+
+4. open another terminal and type `mars`
+
+5. start your journey
+
+## TL;DR
+
+### HW1
+
+I managed to merge those two above into a complete message queue which use shared memory as buffer and semaphore as lock.
+
+### HW2
+
+Some fix in WSL and then it is really simple to have a deb package.
+
 ## Example
 
 > All examples run on WSL(Windows Subsystem on Linux), which may be slightly different from common environment.
 
 ### Half-duplex
 
-![earth](lab1.earth.oneside.PNG)
+![earth](https://github.com/thekingofcity/OS/blob/lab1/lab1.earth.oneside.PNG)
 
-![mars](lab1.mars.oneside.PNG)
+![mars](https://github.com/thekingofcity/OS/blob/lab1/lab1.mars.oneside.PNG)
 
 |Time|Earth|Mars|
 |:---:|:---:|:---:|
@@ -36,9 +58,9 @@
 
 ### Full-duplex
 
-![earth](lab1.earth.PNG)
+![earth](https://github.com/thekingofcity/OS/blob/lab1/lab1.earth.PNG)
 
-![mars](lab1.mars.PNG)
+![mars](https://github.com/thekingofcity/OS/blob/lab1/lab1.mars.PNG)
 
 |Time|Earth|Mars|
 |:---:|:---:|:---:|
@@ -53,9 +75,9 @@
 
 ### Full Buffer (size = 2)
 
-![earth](lab1.earth.fullbuffer.PNG)
+![earth](https://github.com/thekingofcity/OS/blob/lab1/lab1.earth.fullbuffer.PNG)
 
-![mars](lab1.mars.fullbuffer.PNG)
+![mars](https://github.com/thekingofcity/OS/blob/lab1/lab1.mars.fullbuffer.PNG)
 
 |Time|Earth|Mars|empty slots|
 |:---:|:---:|:---:|:---:|
@@ -124,17 +146,64 @@ Makefile is quite easy. Follow [this guide][4] and [this guide][5], you will be 
 
 However I do encounter a problem which need tab not spaces before segement. [More details here][3].
 
+## Deb package
+
+In the second part of this lab, a deb package is required to install programs made before. To achieve this goal, [this blog][7] might help. It is clear that just a few lines in `control` and you can get a deb package right away.
+
+### Command Line Usage
+
+* package
+`sudo dpkg -b program-name program-name_version_architeture.deb`
+
+* Install
+`sudo dpkg -i program-name_version_architeture.deb`
+
+* Uninstall
+`sudo dpkg -P program-name`
+
+### FileSystem without metadata
+
+Though steps above seems really easy to create a deb package, I encountered a wired problem where `dpkg` reported
+
+>`dpkg-deb: error: control directory has bad permissions 777 (must be >=0755 and <=0775)`
+
+I first tried `chmod 755 program-name/DEBIAN` without thought, however that doesn't work.
+
+![deb without metadata](https://github.com/thekingofcity/OS/blob/lab1/lab1.deb_without_metadata.PNG)
+
+After some search, this thread caught my attention
+[control directory has bad permissions 777 (must be >=0755 and <=0775)][8]. Someone comment that could be a filesystem format problem.
+> Or is this NTFS ? Then you have more luck.
+Then you can try mounting that partition with uid=your_uid,gid=your_gid
+
+So I tried searching `wsl 777` in Google and I found some clue pointed to a WSL config option.
+[File permissions keeps changing from none to 777][9]
+
+> Do you utilize the metadata option that you can configure in wsl.conf?
+
+And after that tutorial [Automatically Configuring WSL][10], everything is okay.
+
+### Run without absolute path
+
+Program only in `sudo sudo -V | grep PATH`
+
+> Value to override user's $PATH with: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+
+could be started without absolute path. [Some programs not found when used with sudo][11]
+
+So move the program to `program-name/usr/local/bin/` will let the dpkg installing them in the place where you can call wihtout absolute path.
+
+### Outcome
+
+![deb](https://github.com/thekingofcity/OS/blob/lab1/lab1.deb.PNG)
+
 ## Closing words
 
-![msgget](lab1.msgget.PNG)
+![msgget](https://github.com/thekingofcity/OS/blob/lab1/lab1.msgget.PNG)
 
 Since ```msgget``` is not implemented in WSL, I have no choice but to use other methods to get process known of messages. Then I recalled some part in CSAPP which indeed gave me some insights(codes more technically). However when I almost finished this lab I found it is an inter-thread communication solution.
 
 To solve that, I turn to shared memory example and I soon realized that it is the same with memory in thread.
-
-## TL;DR
-
-I managed to merge those two above into a complete message queue which use shared memory as buffer and semaphore as lock.
 
 [1]: http://csapp.cs.cmu.edu/public/code.html
 
@@ -147,3 +216,13 @@ I managed to merge those two above into a complete message queue which use share
 [5]: https://blog.csdn.net/yychuyu/article/details/79950414
 
 [6]: https://www.cnblogs.com/52php/p/5861372.html
+
+[7]: https://blog.csdn.net/yangbingzhou/article/details/33318625
+
+[8]: https://ubuntuforums.org/showthread.php?t=1025572
+
+[9]: https://github.com/Microsoft/WSL/issues/3484
+
+[10]: https://devblogs.microsoft.com/commandline/automatically-configuring-wsl/
+
+[11]: https://askubuntu.com/questions/118263/some-programs-not-found-when-used-with-sudo
