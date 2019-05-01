@@ -171,8 +171,10 @@ I first tried `chmod 755 program-name/DEBIAN` without thought, however that does
 
 ![deb without metadata](https://github.com/thekingofcity/OS/blob/lab1.5/lab1.deb_without_metadata.PNG)
 
+**TL;DR This is a WSL bug/feature that it mounts filesystem without metadata, so there is no anykind of file premissions**
+
 After some search, this thread caught my attention
-[control directory has bad permissions 777 (must be >=0755 and <=0775)][8]. Someone comment that could be a filesystem format problem.
+[control directory has bad permissions 777 (must be >=0755 and <=0775)][8]. Someone commented that could be a filesystem format problem.
 > Or is this NTFS ? Then you have more luck.
 Then you can try mounting that partition with uid=your_uid,gid=your_gid
 
@@ -191,7 +193,7 @@ Program only in `sudo sudo -V | grep PATH`
 
 could be started without absolute path. [Some programs not found when used with sudo][11]
 
-So move the program to `program-name/usr/local/bin/` will let the dpkg installing them in the place where you can call wihtout absolute path.
+So move the program to `program-name/usr/local/bin/` will let the dpkg installing them in the place where you can call without absolute path.
 
 ### Outcome
 
